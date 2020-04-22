@@ -35,3 +35,22 @@ for i in range(len(string_array)):
         freq[string_array[i]] = freq[string_array[i]]+1 # increment the frequency it already has, we have spotted another occurrence
 
 print(freq)
+
+# function that takes any string to find a dictionary of frequencies of k-mer
+def frequency_given_k(string, k):
+    string_array_fn = []
+
+    for a in range(len(string) + 1):
+        new_substring = string[a:a+k]
+        string_array_fn.append(new_substring)
+        a = a-1  # decrement by 1 so that the last letter of each substring repeats; e.g. ATA -> ATC, not TCC
+
+    dict = {}
+
+    for b in range(len(string_array_fn)):
+        #print(string_array_fn[b])
+        if string_array_fn[b] not in dict.keys():  # if the checked 3-mer is not in the keys, i.e. original
+            dict[string_array_fn[b]] = 1  # it has a frequency of 1; it is new
+        elif string_array_fn[b] in dict.keys():  # if the checked 3-mer IS in the keys, i.e. it has been spotted before
+            dict[string_array_fn[b]] = dict[string_array_fn[b]] + 1  # increment the frequency it already has, we have spotted another occurrence
+    return dict
