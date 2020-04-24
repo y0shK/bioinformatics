@@ -1,5 +1,5 @@
-# code inspired by Bioinformatics for Beginners on Coursera
-# with my own twists and original ideas thrown in
+# this code's ideas come from the Coursera course Bioinformatics for Beginners by UCSD
+# except for the first function pattern_count, all of this code is original
 
 # find length of ori in Vibrio cholerae ori
 
@@ -80,3 +80,43 @@ frequent_words_problem_k = 10
 
 find_max_frequency_of_words(frequency_given_k(frequent_words_problem_text, frequent_words_problem_k))
 print('\n')
+
+# reverse complement problem - find reverse complenet of DNA string
+# given Pattern, return reverse complement of Pattern
+
+def reverse_complement_pattern(dna_string):
+    """
+    Reverse complement strategy - take the string, reverse it, find the complement, return the complement
+
+    reverse string - because original strand is read 5' to 3', so Python accounts for that by reversing the string
+        how to reverse? use slice notation
+        slice notation works with string[beginning:end:n], leaving beginning and end blank ensures first and last param
+        -1 for n indicates that the whole string is included - last character first, ..., first character last
+    https://stackoverflow.com/questions/931092/reverse-a-string-in-python
+
+    find the complement - for every 'A' append 'T', etc.
+        how to find the complement? use a dictionary.
+        for key, value in character -> for every key == 'A', value == 'T', etc.
+    https://stackoverflow.com/questions/4978787/how-to-split-a-string-into-array-of-characters
+    """
+    print('DNA string given: ' + dna_string)
+
+    # break the string into components of characters for the for loop
+    # replace each nucleotide with its complement one by one
+    dna_string_reversed = dna_string[::-1]
+    dna_string_reversed_components = list(dna_string_reversed)
+
+    new_dna_string_components = []
+    dna_dict = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
+
+    for char in dna_string_reversed_components:
+        for key, value in dna_dict.items():
+            if char == key: # find which index this specific character in the reversed string belongs to
+                new_dna_string_components.append(value) # find the nucleotide for that specific index
+
+    # rejoin the broken string, put together all the nucleotides
+    dna_complement_string = ''.join(new_dna_string_components)
+    print('Complement of DNA string given: ' + dna_complement_string + '\n')
+
+reverse_complement_pattern('AGT')
+reverse_complement_pattern('AAAACCCGGT')
