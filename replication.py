@@ -120,3 +120,18 @@ def reverse_complement_pattern(dna_string):
 
 reverse_complement_pattern('AGT')
 reverse_complement_pattern('AAAACCCGGT')
+
+# Pattern Matching Problem - given a pattern and genome, find all 'first indices' where pattern is
+# find where pattern is a subset of genome using string[i:i+k] = pattern
+# this if statement goes through all possible permutations; 1:4, 2:6, 3:7, etc.
+def pattern_matching(pattern, genome):
+    positions_matching = [] # append the first nucleotide where the pattern is found in the genome
+    iteration_amount = len(pattern) # find the number of characters to move to after the first position match
+
+    for i in range(len(genome)): # go through all characters in the genome
+        if genome[i:i + iteration_amount] == pattern: # does the pattern match this specific slice of the genome?
+            positions_matching.append(i) # if yes, record this
+    return positions_matching
+
+print(pattern_matching('ATAT', 'GATATATGCATATACTT'))
+print(pattern_matching('CTTGATCAT', 'CTTGATCATCTTGATCATCTTGATCAT'))
