@@ -135,3 +135,62 @@ def pattern_matching(pattern, genome):
 
 print(pattern_matching('ATAT', 'GATATATGCATATACTT'))
 print(pattern_matching('CTTGATCAT', 'CTTGATCATCTTGATCATCTTGATCAT'))
+
+# ori of thermotoga petrophila
+thermotoga_ori_string = 'AACTCTATACCTCCTTTTTGTCGAATTTGTGTGATTTATAGAGAAAATCTTATTAACTGAAACTAAAATGGTAGGTTTGGTGGTAGGTTTTGTGTACATTTTGTAGTATCTGATTTTTAATTACATACCGTATATTGTATTAAATTGACGAACAATTGCATGGAATTGAATATATGCAAAACAAACCTACCACCAAACTCTGTATTGACCATTTTAGGACAACTTCAGGGTGGTAGGTTTCTGAAGCTCTCATCAATAGACTATTTTAGTCTTTACAAACAATATTACCGTTCAGATTCAAGATTCTACAACGCTGTTTTAATGGGCGTTGCAGAAAACTTACCACCTAAAATCCAGTATCCAAGCCGATTTCAGAGAAACCTACCACTTACCTACCACTTACCTACCACCCGGGTGGTAAGTTGCAGACATTATTAAAAACCTCATCAGAAGCTTGTTCAAAAATTTCAATACTCGAAACCTACCACCTGCGTCCCCTATTATTTACTACTACTAATAATAGCAGTATAATTGATCTGA'
+
+def find_substring_count(pattern, genome):
+    k = len(pattern)
+
+    substring_index_count = 0
+
+    for i in range(len(genome)):
+        if genome[i:i+k] == pattern:
+            substring_index_count = substring_index_count + 1
+    return substring_index_count
+
+print(find_substring_count('GCG', 'GCGCG')) # 2
+print(find_substring_count('ATGATCAAG', thermotoga_ori_string)) # 0
+print(find_substring_count('CTTGATCAT', thermotoga_ori_string)) # 0
+# because the substrings do not exist in thermotoga ori, we need to generalize
+# how to find clumps for a general ori? instead of looking for frequency of strings, we look for strings w/ high freq
+
+# Clump Finding Problem - find patterns that form clumps in a given string
+
+import operator
+# sort using sorted(d.items(), key=operator.itemgetter(1))
+# link here: https://thomas-cokelaer.info/blog/2017/12/how-to-sort-a-dictionary-by-values-in-python/
+
+def find_clumps(genome, k): # when finding clumps, necessary information is genome and k (k decides how long a 'recurring' string is)
+    clump_dict = {} # empty dictionary to append keys to - each new string is added as its own index, if a string recurs its frequency goes up by 1
+
+    max_L_recorded_dict = {} # keep track of the max index that a recurring string occurs at
+
+    for i in range(len(genome)):
+        max_L_recorded_dict[genome[i:i+k]] = 0 # each recurring string starts with an index of 0
+
+    for i in range(len(genome)):
+        if genome[i:i+k] not in clump_dict.keys(): # is the clump new?
+            clump_dict[genome[i:i+k]] = 1 # add a frequency of 1, it is newly discovered
+        elif genome[i:i+k] in clump_dict.keys(): # is the clump old?
+            clump_dict[genome[i:i+k]] = clump_dict[genome[i:i+k]] + 1 # increment the frequency we have seen the clump for
+            max_L_recorded_dict[genome[i:i+k]] = i # we have seen the clump at a new index, note the latest possible index we can see it
+
+    # find the assorted variables
+        # integer L, the max index we see a recurring string at
+        # integer k, which denotes a substring as a k-mer
+        # integer t, the amount of times a substring shows up
+
+    max_dict_key = max(clump_dict, key=clump_dict.get) # what was the substring that recurred the most?
+    max_dict_val = clump_dict[max_dict_key] # how many times did the most-recurring substring show up?
+    max_L_val_for_key = max_L_recorded_dict[max(max_L_recorded_dict, key=max_L_recorded_dict.get)] # what was the maximum index the most-recurring substring showed up at?
+
+    # sort the dictionary so that the most recurring strings show up first
+    sorted_dict = sorted(clump_dict.items(), key=operator.itemgetter(1), reverse=True) # reverse = True is descending order
+
+    print(sorted_dict)
+    print('The (L, t)-clump inside the genome: the %s-mer %s, forming a (%s, %s) clump' % (k, max_dict_key, max_L_val_for_key, max_dict_val))
+
+find_clumps(thermotoga_ori_string, 4)
+find_clumps('gatcagcataagggtccCTGCAATGCATGACAAGCCTGCAGTtgttttac'.upper(), 4) # TCGA, just like the (25, 3)-clump given on Stepik
+
