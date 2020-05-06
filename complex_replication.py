@@ -30,3 +30,22 @@ def symbol_in_wrapped_genome(genome, nucleotide_length, symbol):
     print(symbol_dict)
 
 symbol_in_wrapped_genome('AAAAGGGG', 4, 'A')
+
+# define skew array to look at imbalances between cytosine and guanine
+def skew_array(genome):
+    skew_array_alpha = list(genome)
+    skew_array_num = [0]
+    skew_count = 0
+
+    for i in range(len(genome)):
+        if skew_array_alpha[i] == 'C':
+            skew_count -= 1
+        elif skew_array_alpha[i] == 'G':
+            skew_count += 1
+        skew_array_num.append(skew_count)
+
+    print(skew_array_num)
+
+skew_array('CATGGGCATCGGCCATACGCC')
+skew_array('AGCGTGCCGAAATATGCCGCCAGACCTGCTGCGGTGGCCTCGCCGACTTCACGGATGCCAAGTGCATAGAGGAAGCGAGCAAAGGTGGTTTCTTTCGCTTTATCCAGCGCGTTAACCACGTTCTGTGCCG')
+
