@@ -49,3 +49,39 @@ def skew_array(genome):
 skew_array('CATGGGCATCGGCCATACGCC')
 skew_array('AGCGTGCCGAAATATGCCGCCAGACCTGCTGCGGTGGCCTCGCCGACTTCACGGATGCCAAGTGCATAGAGGAAGCGAGCAAAGGTGGTTTCTTTCGCTTTATCCAGCGCGTTAACCACGTTCTGTGCCG')
 
+# minimum skew problem - find genome position where skew is minimum (C - G differential is very negative, the most negative = minimum = ori)
+# ori is a local minimum where the derivative changes sign
+
+def minimum_skew(genome):
+    array = skew_array(genome)
+    min_point = min(array) # find the value of the minimum point, then look for what index the value shows up in
+
+    min_point_list = []
+
+    # what indices correspond to the value we found earlier?
+    for i in range(len(genome)):
+        if array[i] == min_point:
+            min_point_list.append(i)
+
+    print(min_point_list)
+    return min_point_list
+
+minimum_skew('TAAAGACTGCCGAGAGGCCAACACGAGTGCTAGAACGAGGGGCGTAAACGCGGGTCCGAT')
+
+# Hamming distance - find the total amount of mismatch between two nucleotide strings
+def hamming_distance(p, q):
+    if len(p) == len(q):
+        string_len = len(p)
+
+    mismatch = []
+    mismatch_count = 0
+
+    for i in range(0, string_len):
+        if p[i] != q[i]: # iterate through length of nucleotides, find mismatches where one string is not equal to another
+            mismatch.append(i)
+            mismatch_count += 1
+
+    print(mismatch_count)
+    return mismatch_count
+
+hamming_distance('GGGCCGTTGGT', 'GGACCGTTGAC')
