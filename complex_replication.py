@@ -70,18 +70,55 @@ minimum_skew('TAAAGACTGCCGAGAGGCCAACACGAGTGCTAGAACGAGGGGCGTAAACGCGGGTCCGAT')
 
 # Hamming distance - find the total amount of mismatch between two nucleotide strings
 def hamming_distance(p, q):
-    if len(p) == len(q):
-        string_len = len(p)
+    
+    string_len = len(p)
 
     mismatch = []
     mismatch_count = 0
 
     for i in range(0, string_len):
-        if p[i] != q[i]: # iterate through length of nucleotides, find mismatches where one string is not equal to another
-            mismatch.append(i)
-            mismatch_count += 1
+	if len(p) == len(q): # check here to ensure that the pattern, which is the substring of the Text, is comparing the same number of nucleotides in the string
+        	if p[i] != q[i]: # iterate through length of nucleotides, find mismatches where one string is not equal to another
+            	mismatch.append(i)
+            	mismatch_count += 1
 
     print(mismatch_count)
     return mismatch_count
 
 hamming_distance('GGGCCGTTGGT', 'GGACCGTTGAC')
+
+# same as pattern matching, except up to n mismatches can occur and the string is acceptable
+def approximate_pattern_matching(Pattern, Text, n):
+
+    positions_of_approximate_patterns = []
+
+    for i in range(len(Text)):
+	
+	# find the mismatch count between the given Pattern and each slice of the Text
+        hamming_count = hamming_distance(Pattern, Text[i:i+(len(Pattern))])
+
+	# is the mismatch count acceptable (i.e. <= n) AND is the length(Pattern) = length of Text substring?
+        if hamming_count <= n and len(Pattern) == len(Text[i:i+len(Pattern)]):
+            positions_of_approximate_patterns.append(i)
+
+    print(positions_of_approximate_patterns)
+    return(positions_of_approximate_patterns)
+
+approximate_pattern_matching('ATTCTGGA', 'CGCCCGAATCCAGAACGCATTCCCATATTTCGGGACCACTGGCCTCCACGGTACGGACGTCAATCAAAT', 3)
+
+def approximate_pattern_count(Pattern, Text, n):
+
+    pattern_count = 0
+
+    for i in range(len(Text)):
+
+	# same procedure as approximate_pattern_matching, check if mismatch count is acceptable
+        hamming_count = hamming_distance(Pattern, Text[i:i + (len(Pattern))])
+
+        if hamming_count <= n and len(Pattern) == len(Text[i:i+len(Pattern)]):
+            pattern_count += 1 # we are interested in the frequency of the pattern showing, not the position
+
+    print(pattern_count)
+    return(pattern_count)
+
+approximate_pattern_count('GAGG', 'TTTAGAGCCTTCAGAGG', 2)
